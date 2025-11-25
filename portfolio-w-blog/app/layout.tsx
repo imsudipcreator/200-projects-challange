@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { BlogContextProvider } from "@/contexts/blog-context";
 import "./globals.css";
+import { AuthContextProvider } from "@/contexts/auth-context";
+
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -19,11 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning lang="en">
       <body
         className={`${poppins.variable} antialiased`}
       >
-        {children}
+        <AuthContextProvider>
+          <BlogContextProvider>
+            {children}
+          </BlogContextProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );
