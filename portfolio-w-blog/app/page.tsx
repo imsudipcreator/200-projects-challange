@@ -24,11 +24,11 @@ export default function Home() {
       </nav>
 
       {/**Hero section */}
-      <section className="w-full flex items-center justify-center gap-4 flex-1">
+      <section className="w-full flex items-center justify-center gap-8 flex-1">
           <Image src={'/assets/profile.jpg'} alt="Profile Image" width={300} height={300} className="rounded-full object-cover"/>
           <div className="flex-col items-start justify-center gap-5 max-w-[30%]">
-            <h1 className="text-4xl font-medium">Sudip Mahata</h1>
-            <h4 className="my-2 font-medium">A bit about me</h4>
+            <h1 className="text-5xl font-medium">Sudip Mahata</h1>
+            <h4 className="my-2 text-xl font-medium">A bit about me</h4>
             <p className="text-foreground/80 text-sm">
               I am a self taught software engineer from West bengal, India.
               I provide digital effective solutions for buisnesess through our agency named Imago.
