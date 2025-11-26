@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -9,7 +10,6 @@ import {
 import { db } from "./firebase";
 import { BlogType } from "@/types/blog-type";
 import { UserType } from "@/types/user-type";
-
 
 /**
  * Adds a user to the database.
@@ -61,10 +61,14 @@ export async function getUserFromUID(userId: string): Promise<UserType | null> {
  * @param {string} title - The title of the blog
  * @param {string} content - The content of the blog
  * @param {string} userId - The ID of the user who is adding the blog
- * @returns {Promise<string>} - A promise that resolves to the ID of the blog if it is successfully added, null otherwise
+ * @returns {Promise<boolean>} - A promise that resolves to the ID of the blog if it is successfully added, null otherwise
  * @throws {FirebaseError} - If there is an error while adding the blog
  */
-export async function addBlog(title: string, content: string, userId: string): Promise<boolean> {
+export async function addBlog(
+  title: string,
+  content: string,
+  userId: string
+): Promise<boolean> {
   try {
     const docRef = await addDoc(collection(db, "blogs"), {
       content,
@@ -74,13 +78,75 @@ export async function addBlog(title: string, content: string, userId: string): P
       userRef: `/users/${userId}`,
     });
     console.log("Document written with ID: ", docRef.id);
-    return true
+    return true;
   } catch (error) {
     console.log("Error adding document: ", error);
-    return false
+    return false;
   }
 }
 
+export async function deleteBlogwithId(blogId: string): Promise<boolean> {
+  try {
+    await deleteDoc(doc(db, "blogs", blogId));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getBlogWithId(blogId: string): Promise<BlogType | null> {
+  try {
+    const docRef = doc(db, "blogs", blogId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // get user from ref
+      const uid = docSnap.data().userRef.toString().split("/")[2];
+      const user = await getUserFromUID(uid);
+      console.log("Document data:", docSnap.data());
+      if (!user) {
+        console.log("User not found");
+        return null;
+      }
+      return {
+        id: blogId,
+        title: docSnap.data().title,
+        author: user?.fullname,
+        content: docSnap.data().content,
+        createdAt: docSnap.data().createdAt,
+        updatedAt: docSnap.data().updatedAt,
+      } as BlogType;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getUIDOfBlog(blogId: string): Promise<string | null> {
+  try {
+    const docRef = doc(db, "blogs", blogId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // get userID from ref
+      const uid = docSnap.data().userRef.toString().split("/")[2];
+      return uid;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
 /**
  * Retrieves all the blogs from the database.
