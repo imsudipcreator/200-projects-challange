@@ -5,6 +5,7 @@ import { signUp } from "@/lib/firebase-auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { Loader } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react"
 
 
@@ -15,6 +16,7 @@ type FormType = {
 }
 
 export default function SignUpPage() {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [loadingAuthStatus, setLoadingAuthStatus] = useState(true);
     const [form, setForm] = useState<FormType>({
@@ -40,7 +42,7 @@ export default function SignUpPage() {
             setLoading(true);
             const success = await signUp(form.fullname, form.email, form.password);
             if (success) {
-                // window.location.replace("/");
+                router.replace("/blogs");
             }
         } catch (error) {
             console.log(error);
@@ -53,7 +55,7 @@ export default function SignUpPage() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                window.location.replace("/");
+                router.replace("/");
             } else {
                 setLoadingAuthStatus(false);
             }

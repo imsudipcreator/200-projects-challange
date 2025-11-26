@@ -1,37 +1,45 @@
 "use client";
 
 import { auth } from "@/lib/firebase";
+import { getUserFromUID } from "@/lib/firebase-firestore";
+import { UserType } from "@/types/user-type";
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 
 
 interface AuthContextType {
     isSignedIn: boolean;
-    setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>
+    setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
     loadingAuthStatus: boolean;
-    setLoadingAuthStatus: React.Dispatch<React.SetStateAction<boolean>>
+    setLoadingAuthStatus: React.Dispatch<React.SetStateAction<boolean>>;
+    user: UserType | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 
 export function AuthContextProvider({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState<UserType | null>(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [loadingAuthStatus, setLoadingAuthStatus] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setIsSignedIn(true)
+                const uid = user.uid;
+                const foundUser = await getUserFromUID(uid);
+                setUser(foundUser);
+                setIsSignedIn(true);
             } else {
-                setIsSignedIn(false)
+                setUser(null);
+                setIsSignedIn(false);
             }
         });
 
         return () => unsubscribe();
     }, [])
     return (
-        <AuthContext.Provider value={{ isSignedIn, setIsSignedIn, loadingAuthStatus, setLoadingAuthStatus }}>
+        <AuthContext.Provider value={{ isSignedIn, setIsSignedIn, loadingAuthStatus, setLoadingAuthStatus, user }}>
             {children}
         </AuthContext.Provider>
     )

@@ -5,6 +5,7 @@ import { signIn } from "@/lib/firebase-auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { Loader } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 
@@ -15,6 +16,7 @@ type FormType = {
 
 
 export default function SignInPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [loadingAuthStatus, setLoadingAuthStatus] = useState(true);
   const [form, setForm] = useState<FormType>({
@@ -25,6 +27,14 @@ export default function SignInPage() {
   const isFormFieldEmpty = !form.email || !form.password;
 
 
+  /**
+   * Handles the submission of the sign in form.
+   * Prevents the default form submission behavior, logs the form data to the console,
+   * calls the signIn function with the form's email and password, and redirects to the homepage
+   * if the signIn function returns true.
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event
+   * @throws {FirebaseError} - If there is an error while signing in the user
+   */
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("form: ", form);
@@ -32,7 +42,7 @@ export default function SignInPage() {
       setLoading(true);
       const success = await signIn(form.email, form.password);
       if (success) {
-        window.location.replace("/");
+        router.replace("/blogs");
       }
     } catch (error) {
       console.log(error);
@@ -45,7 +55,7 @@ export default function SignInPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        window.location.replace("/");
+        router.replace("/");
       } else {
         setLoadingAuthStatus(false);
       }
