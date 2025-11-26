@@ -51,11 +51,11 @@ export default function AllBlogsPage() {
           >
             <div className="flex-col gap-3 w-full hover:bg-foreground/30 active:bg-foreground/30 p-2 rounded-lg cursor-pointer transition-colors duration-200 ">
               <h1 className="font-medium text-lg">{blog.title}</h1>
-              <p>
-                {blog.content.length > 90
-                  ? blog.content.slice(90) + "..."
+              {/* <p>
+                {blog.content.length > 20
+                  ? blog.content.slice(20) + "..."
                   : blog.content}
-              </p>
+              </p> */}
               <p className="text-foreground/70">{blog.author}</p>
             </div>
           </Link>

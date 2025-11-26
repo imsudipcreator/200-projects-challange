@@ -39,7 +39,7 @@ export default function NewBlogPage() {
             return
         }
         try {
-            const success = await addBlog(blog.title, blog.content, user.uid);
+            const success = await addBlog(blog.title, blog.content, user.uid, user.fullname);
             if(success){
                 router.replace("/blogs");
             }
