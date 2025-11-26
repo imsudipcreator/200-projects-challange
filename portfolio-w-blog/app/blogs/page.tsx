@@ -38,6 +38,8 @@ export default function AllBlogsPage() {
 
     fetchBlogs();
   }, [])
+
+  
   return (
     <div className="w-screen h-svh flex items-center justify-center">
       <div className="w-full md:w-[80%] min-h-svh flex-col gap-7 p-4">
@@ -69,10 +71,10 @@ export default function AllBlogsPage() {
               <h1 className="text-2xl">Welcome, {auth.currentUser?.email?.split("@")[0]}</h1>
               <h1 className="text-lg">{auth.currentUser?.email}</h1>
               <p className="text-foreground/80 text-sm">{auth.currentUser?.uid}</p>
-              <button className="px-2 py-1 rounded-md bg-foreground text-background mt-4 hover:bg-foreground/80 transition-colors duration-300 cursor-pointer flex gap-2 items-center">
+              <Link href={'/blogs/new'} className="px-2 py-1 rounded-md bg-foreground text-background mt-4 hover:bg-foreground/80 transition-colors duration-300 cursor-pointer flex gap-2 items-center w-fit">
                 <Pencil size={20} />
                 <span className="text-lg">Write a blog</span>
-              </button>
+              </Link>
               <button onClick={logout} className="px-2 py-1 rounded-md bg-red-500 text-white mt-4 hover:bg-red-500/80 transition-colors duration-300 cursor-pointer flex gap-2 items-center">
                 <LogOut size={20} />
                 <span className="text-lg">Log out</span>
