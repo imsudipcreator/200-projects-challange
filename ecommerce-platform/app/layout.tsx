@@ -2,17 +2,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-
-const inter = Inter({
+const InterFont = Inter({
   variable: "--font-inter",
-  subsets: ["latin"]
-})
-
+  subsets: ["latin"],
+});
 export const metadata: Metadata = {
-  title: "Online Shopping India Mobile, Cameras, Lifestyle & more Online @ Flipkart.com",
-  description: "Flipkart.com - India's best website to buy wide range of products including Electronics, Books, Cloths, Accessories, Home furnishing and much more. CoD & Free Shipping. Also try Our APP for seamless Online Shopping experience.",
+  title: "Happy Mart - Online Ecommerce Platform",
+  description: "A online ecommerce platform for buying products",
   icons: {
-    icon: "/favicon.png"
+    icon: "/logo.svg"
   }
 };
 
@@ -24,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${InterFont.variable} antialiased`}
       >
         {children}
       </body>
